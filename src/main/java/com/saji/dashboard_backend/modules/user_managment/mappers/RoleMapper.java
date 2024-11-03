@@ -1,19 +1,22 @@
 package com.saji.dashboard_backend.modules.user_managment.mappers;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import com.saji.dashboard_backend.modules.user_managment.dtos.RoleResponse;
+import com.saji.dashboard_backend.modules.user_managment.dtos.RoleDto;
 import com.saji.dashboard_backend.modules.user_managment.entities.Role;
 import com.saji.dashboard_backend.shared.mappers.BaseMapper;
 
 @Service
-public class RoleMapper implements BaseMapper<Role> {
+public class RoleMapper implements BaseMapper<Role, RoleDto>{
 
     @Override
-    public RoleResponse convertEntityToResponse(Role entity) {
-        RoleResponse res = new RoleResponse();
-        BeanUtils.copyProperties(entity, res);
-        return res;
+    public Role createEntity() {
+        return new Role();
     }
+
+    @Override
+    public RoleDto createEntityDto() {
+        return new RoleDto();
+    }
+    
 }

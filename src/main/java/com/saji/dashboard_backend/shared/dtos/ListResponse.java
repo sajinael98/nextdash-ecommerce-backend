@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class ListResponse<T extends BaseResponse> {
+public class ListResponse<T extends BaseDto> {
     private List<T> data;
     private Long total;
 }

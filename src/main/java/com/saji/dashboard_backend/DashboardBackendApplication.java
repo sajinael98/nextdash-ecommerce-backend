@@ -27,7 +27,7 @@ public class DashboardBackendApplication {
 			SignInRequest request = new SignInRequest();
 			request.setUsername("admin");
 			request.setPassword("123456");
-			// System.out.println(uAuthService.signIn(request));
+			System.out.println(uAuthService.signIn(request).getToken());
 		};
 	}
 }

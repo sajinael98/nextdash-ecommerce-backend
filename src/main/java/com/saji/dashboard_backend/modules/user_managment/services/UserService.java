@@ -19,12 +19,12 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class UserService extends BaseService<User, UserDto, UserDto> {
+public class UserService extends BaseService<User, UserDto> {
     private UserRepo userRepo;
     private RoleRepo roleRepo;
 
-    public UserService(UserRepo userRepo, UserMapper userMapper, RoleRepo roleRepo) {
-        super(userRepo, userMapper, User.class);
+    public UserService(UserRepo userRepo, RoleRepo roleRepo, UserMapper userMapper) {
+        super(userRepo, userMapper);
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
     }
@@ -53,7 +53,7 @@ public class UserService extends BaseService<User, UserDto, UserDto> {
         if (invalidRolesId.size() > 0) {
             throw new IllegalArgumentException("Invaled Roles Id: " + invalidRolesId);
         }
-        
+
         user.setRoles(roles);
         roles.forEach(role -> role.getUsers().add(user));
 

@@ -1,12 +1,12 @@
 package com.saji.dashboard_backend.modules.user_managment.dtos;
 
-import com.saji.dashboard_backend.shared.dtos.BaseRequest;
-import com.saji.dashboard_backend.shared.dtos.BaseResponse;
+import com.saji.dashboard_backend.shared.dtos.BaseDto;
 
 import lombok.Data;
 
 @Data
-public class PermissionDto implements BaseRequest, BaseResponse {
+public class PermissionDto extends BaseDto {
+    private Long id;
     private String entity;
     private boolean createR;
     private boolean readR;

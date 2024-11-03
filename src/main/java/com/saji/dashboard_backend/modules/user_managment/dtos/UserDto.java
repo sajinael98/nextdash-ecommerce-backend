@@ -1,7 +1,6 @@
 package com.saji.dashboard_backend.modules.user_managment.dtos;
 
-import com.saji.dashboard_backend.shared.dtos.BaseRequest;
-import com.saji.dashboard_backend.shared.dtos.BaseResponse;
+import com.saji.dashboard_backend.shared.dtos.BaseDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserDto implements BaseRequest, BaseResponse {
+public class UserDto extends BaseDto {
     @NotBlank
     private String firstName;
 

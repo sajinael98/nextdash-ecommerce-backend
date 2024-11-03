@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.saji.dashboard_backend.shared.dtos.BaseRequest;
-import com.saji.dashboard_backend.shared.dtos.BaseResponse;
+import com.saji.dashboard_backend.shared.dtos.BaseDto;
 import com.saji.dashboard_backend.shared.dtos.ListResponse;
 import com.saji.dashboard_backend.shared.dtos.PaginationFilter;
 import com.saji.dashboard_backend.shared.dtos.ValueFilter;
@@ -27,27 +26,27 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BaseController<Entity extends BaseEntity, Request extends BaseRequest, Response extends BaseResponse> {
-    private final BaseService<Entity, Request, Response> service;
+public class BaseController<Entity extends BaseEntity, EntityDto extends BaseDto> {
+    private final BaseService<Entity, EntityDto> service;
 
     @PostMapping
-    public ResponseEntity<Response> create(@Valid @RequestBody Request request) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        return ResponseEntity.ok().body(service.create(request));
+    public ResponseEntity<EntityDto> create(@Valid @RequestBody EntityDto request) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return (ResponseEntity<EntityDto>) ResponseEntity.ok().body(service.create(request));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Response> update(@PathVariable Long id,
-            @Valid @RequestBody Request request) {
-        return ResponseEntity.ok().body(service.update(id, request));
+    public ResponseEntity<EntityDto> update(@PathVariable Long id,
+            @Valid @RequestBody EntityDto request) {
+        return (ResponseEntity<EntityDto>) ResponseEntity.ok().body(service.update(id, request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response> getById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(service.getById(id));
+    public ResponseEntity<EntityDto> getById(@PathVariable Long id) {
+        return (ResponseEntity<EntityDto>) ResponseEntity.ok().body(service.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<ListResponse<Response>> getList(@RequestParam Map<String, Object> params) {
+    public ResponseEntity<ListResponse<EntityDto>> getList(@RequestParam Map<String, Object> params) {
         PaginationFilterExtractor paginationFilterExtractor = new PaginationFilterExtractor();
         PaginationFilter paginationFilter = paginationFilterExtractor.getFilters(params);
         if (paginationFilter.getPage() == null) {
@@ -64,7 +63,7 @@ public class BaseController<Entity extends BaseEntity, Request extends BaseReque
 
         FieldFilterExtractor fieldFilterExtractor = new FieldFilterExtractor();
         Collection<ValueFilter> valueFilters = fieldFilterExtractor.getFilters(params);
-        ListResponse<Response> response = service.getList(paginationFilter, valueFilters);
+        ListResponse<EntityDto> response = (ListResponse<EntityDto>) service.getList(paginationFilter, valueFilters);
 
         // headers.set("Access-Control-Expose-Headers", "X-Total-Count");
         // headers.set("x-total-count", "" + response.getTotal());

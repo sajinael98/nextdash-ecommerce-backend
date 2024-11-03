@@ -18,7 +18,7 @@ import com.saji.dashboard_backend.shared.controllers.BaseController;
 
 @RestController
 @RequestMapping("/users")
-public class UserController extends BaseController<User, UserDto, UserDto> {
+public class UserController extends BaseController<User, UserDto> {
     private UserService userService;
 
     public UserController(UserService service) {

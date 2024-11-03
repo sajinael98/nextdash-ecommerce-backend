@@ -2,17 +2,23 @@ package com.saji.dashboard_backend.shared.mappers;
 
 import org.springframework.beans.BeanUtils;
 
-import com.saji.dashboard_backend.shared.dtos.BaseRequest;
-import com.saji.dashboard_backend.shared.dtos.BaseResponse;
+import com.saji.dashboard_backend.shared.dtos.BaseDto;
 import com.saji.dashboard_backend.shared.entites.BaseEntity;
 
-public interface BaseMapper<T extends BaseEntity> {
-    default T convertRequestToEntity(T entity, BaseRequest req) {
-        BeanUtils.copyProperties(req, entity);
+public interface BaseMapper<Entity extends BaseEntity, EntityDto extends BaseDto> {
+    default Entity convertRequestToEntity(EntityDto dto) {
+        Entity entity = createEntity();
+        BeanUtils.copyProperties(dto, entity);
         return entity;
     }
 
-    default BaseResponse convertEntityToResponse(T entity) {
-        return null;
+    default EntityDto convertEntityToResponse(Entity entity) {
+        EntityDto dto = createEntityDto();
+        BeanUtils.copyProperties(entity, dto);
+        return dto;
     }
+
+    Entity createEntity();
+
+    EntityDto createEntityDto();
 }

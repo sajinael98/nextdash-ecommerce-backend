@@ -48,32 +48,8 @@ CREATE TABLE files (
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE `categories` (
+CREATE TABLE tasks (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(25),
-    `enabled` TINYINT(1)
-);
-
-CREATE TABLE `items` (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(25) NOT NULL,
-    description TEXT,
-    image VARCHAR(50) NOT NULL,
-    category_id BIGINT NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES `categories` (id)
-);
-
-CREATE TABLE `item_modifiers` (
-    item_id BIGINT NOT NULL,
-    modifier VARCHAR(25) NOT NULL,
-    PRIMARY KEY (item_id, modifier),
-    FOREIGN KEY (item_id) REFERENCES `items` (id)
-);
-
-CREATE TABLE `item_sizes`(
-    item_id BIGINT NOT NULL,
-    `size` VARCHAR(25) NOT NULL,
-    price FLOAT NOT NULL,
-    PRIMARY KEY (item_id, `size`),
-    FOREIGN KEY (item_id) REFERENCES `items` (id)
+    `description` VARCHAR(255)
 );

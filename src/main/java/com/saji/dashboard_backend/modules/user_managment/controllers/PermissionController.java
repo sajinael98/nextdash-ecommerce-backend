@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saji.dashboard_backend.modules.user_managment.dtos.PermissionDto;
-import com.saji.dashboard_backend.modules.user_managment.dtos.PermissionResponse;
 import com.saji.dashboard_backend.modules.user_managment.services.PermissionService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class PermissionController {
     }
 
     @PatchMapping("/{permission-id}")
-    public ResponseEntity<PermissionResponse> updatePermission(@PathVariable(name = "permission-id") Long id,
+    public ResponseEntity<PermissionDto> updatePermission(@PathVariable(name = "permission-id") Long id,
             @RequestBody PermissionDto req) {
         return ResponseEntity.ok().body(service.update(id, req));
     }
