@@ -4,11 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ValueFilterValidator {
-    private final static String VALUE_FILTER_PATTERN = "filter\\[(\\d+)\\]\\[(field|operator|value)\\]";
-    private final static String VALUE_FILTER_FIELD_PATTERN = "filter\\[(\\d+)\\]\\[field\\]";
-    private final static String VALUE_FILTER_OPERATOR_PATTERN = "filter\\[(\\d+)\\]\\[operator\\]";
-    private final static String VALUE_FILTER_VALUE_PATTERN = "filter\\[(\\d+)\\]\\[value\\]";
-
+    private final static String VALUE_FILTER_PATTERN = "filters\\[(\\d+)\\]\\[(field|operator|value)\\]";
+    private final static String VALUE_FILTER_FIELD_PATTERN = "filters\\[(\\d+)\\]\\[field\\]";
+    private final static String VALUE_FILTER_OPERATOR_PATTERN = "filters\\[(\\d+)\\]\\[operator\\]";
+    private final static String VALUE_FILTER_VALUE_PATTERN = "filters\\[(\\d+)\\]\\[value\\]";
     public static boolean isValueFilter(String key) {
         return isValid(VALUE_FILTER_PATTERN, key);
     }
@@ -17,7 +16,7 @@ public class ValueFilterValidator {
         if (isValueFilter(key)) {
             Pattern pattern = Pattern.compile(VALUE_FILTER_PATTERN);
             Matcher matcher = pattern.matcher(key);
-            if(matcher.matches()){
+            if (matcher.matches()) {
                 return matcher.group(1);
             }
         }

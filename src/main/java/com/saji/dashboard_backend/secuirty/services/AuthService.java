@@ -79,7 +79,6 @@ public class AuthService {
 
     @Transactional
     public void changePassword(Long id, ChangePasswordRequest req) {
-        System.out.println(req.getPassword());
         String encodedPassword = encoder.encode(req.getPassword());
         User user = userRepo.findById(id).get();
         user.setPassword(encodedPassword);

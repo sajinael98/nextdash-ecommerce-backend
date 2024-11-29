@@ -33,7 +33,6 @@ public class RoleController extends BaseController<Role, RoleDto> {
     @PostMapping("/{role-id}/permissions")
     public ResponseEntity<ListResponse<PermissionDto>> createPermission(@PathVariable(name = "role-id") Long id,
     @RequestBody PermissionDto request) {
-        System.out.println(request);
         return ResponseEntity.ok().body(roleService.createPermission(id, request));
     }
 }

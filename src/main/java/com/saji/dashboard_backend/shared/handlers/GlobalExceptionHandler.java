@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception ex) {
-        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ERROR>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        System.out.println(ex.getClass().getName());
-        System.out.println(ex.getMessage());
         ex.printStackTrace();
         return ResponseEntity.internalServerError().body(ex.getMessage());
     }

@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.saji.dashboard_backend.shared.dtos.BaseDto;
 import com.saji.dashboard_backend.shared.dtos.ListResponse;
 import com.saji.dashboard_backend.shared.dtos.PaginationFilter;
+import com.saji.dashboard_backend.shared.dtos.SorterValue;
 import com.saji.dashboard_backend.shared.dtos.ValueFilter;
 import com.saji.dashboard_backend.shared.entites.BaseEntity;
 import com.saji.dashboard_backend.shared.services.BaseService;
 import com.saji.dashboard_backend.shared.utils.FieldFilterExtractor;
+import com.saji.dashboard_backend.shared.utils.FieldSorterExtractor;
 import com.saji.dashboard_backend.shared.utils.PaginationFilterExtractor;
 
 import jakarta.validation.Valid;
@@ -63,8 +65,11 @@ public class BaseController<Entity extends BaseEntity, EntityDto extends BaseDto
 
         FieldFilterExtractor fieldFilterExtractor = new FieldFilterExtractor();
         Collection<ValueFilter> valueFilters = fieldFilterExtractor.getFilters(params);
-        ListResponse<EntityDto> response = (ListResponse<EntityDto>) service.getList(paginationFilter, valueFilters);
-
+        
+        FieldSorterExtractor sorterExtractor = new FieldSorterExtractor();
+        Collection<SorterValue> sorters = sorterExtractor.getFilters(params);
+        System.out.println(sorters);
+        ListResponse<EntityDto> response = (ListResponse<EntityDto>) service.getList(paginationFilter, valueFilters, sorters);
         // headers.set("Access-Control-Expose-Headers", "X-Total-Count");
         // headers.set("x-total-count", "" + response.getTotal());
 

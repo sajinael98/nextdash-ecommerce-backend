@@ -1,16 +1,19 @@
 package com.saji.dashboard_backend.shared.services;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.saji.dashboard_backend.shared.dtos.BaseDto;
 import com.saji.dashboard_backend.shared.dtos.ListResponse;
 import com.saji.dashboard_backend.shared.dtos.PaginationFilter;
+import com.saji.dashboard_backend.shared.dtos.SorterValue;
 import com.saji.dashboard_backend.shared.dtos.ValueFilter;
 import com.saji.dashboard_backend.shared.entites.BaseEntity;
 import com.saji.dashboard_backend.shared.mappers.BaseMapper;
@@ -49,9 +52,18 @@ public class BaseService<Entity extends BaseEntity, EntityDto extends BaseDto> {
     }
 
     public ListResponse<BaseDto> getList(PaginationFilter paginationFilter,
-            Collection<ValueFilter> valueFilters) {
+            Collection<ValueFilter> valueFilters, Collection<SorterValue> sorters) {
+        List<Sort.Order> orders = new ArrayList<>();
+        for (SorterValue sorter : sorters) {
+            Sort.Direction direction = sorter.getOrder() == com.saji.dashboard_backend.shared.enums.Sort.DESC
+                    ? Sort.Direction.DESC
+                    : Sort.Direction.ASC;
+            orders.add(new Sort.Order(direction, sorter.getField()));
+        }
+        Sort sort = Sort.by(orders);
         Pageable pageable = PageRequest.of(paginationFilter.getPage() - 1,
-                paginationFilter.getSize());
+                paginationFilter.getSize(), sort);
+
         Page<Entity> entities = baseRepository.findAll(EntitySpecification.findList(valueFilters), pageable);
         List<BaseDto> list = (List<BaseDto>) entities.stream()
                 .map(entity -> baseMapper.convertEntityToResponse(entity))
