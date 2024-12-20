@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saji.dashboard_backend.modules.user_managment.dtos.PermissionDto;
 import com.saji.dashboard_backend.modules.user_managment.entities.Role;
 import com.saji.dashboard_backend.modules.user_managment.services.RoleService;
-import com.saji.dashboard_backend.shared.controllers.EnhancedBaseController;
+import com.saji.dashboard_backend.shared.controllers.BaseController;
 
 @RestController
 @RequestMapping("/roles")
-public class RoleController extends EnhancedBaseController<Role> {
+public class RoleController extends BaseController<Role> {
     private RoleService roleService;
 
     public RoleController(RoleService rolesService) {

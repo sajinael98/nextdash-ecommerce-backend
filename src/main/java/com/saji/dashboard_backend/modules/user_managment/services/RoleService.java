@@ -12,20 +12,17 @@ import com.saji.dashboard_backend.modules.user_managment.entities.Permission;
 import com.saji.dashboard_backend.modules.user_managment.entities.Role;
 import com.saji.dashboard_backend.modules.user_managment.mappers.RoleMapper;
 import com.saji.dashboard_backend.modules.user_managment.repositories.RoleRepo;
-import com.saji.dashboard_backend.shared.services.EnhancedBaseService;
+import com.saji.dashboard_backend.shared.services.BaseService;
 
 import jakarta.transaction.Transactional;
 
 @Service
-public class RoleService extends EnhancedBaseService<Role> {
+public class RoleService extends BaseService<Role> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RoleRepo repo;
-
     public RoleService(RoleRepo roleRepo, RoleMapper roleMapper) {
         super(roleRepo);
-        this.repo = roleRepo;
     }
 
     public List<PermissionDto> getRolesPermissionsByResource(String resource) {

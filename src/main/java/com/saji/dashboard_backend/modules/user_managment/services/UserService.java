@@ -4,11 +4,10 @@ import org.springframework.stereotype.Service;
 
 import com.saji.dashboard_backend.modules.user_managment.entities.User;
 import com.saji.dashboard_backend.modules.user_managment.repositories.UserRepo;
-import com.saji.dashboard_backend.shared.services.EnhancedBaseService;
+import com.saji.dashboard_backend.shared.services.BaseService;
 
 @Service
-public class UserService extends EnhancedBaseService<User> {
-
+public class UserService extends BaseService<User> {
     public UserService(UserRepo userRepo) {
         super(userRepo);
     }
