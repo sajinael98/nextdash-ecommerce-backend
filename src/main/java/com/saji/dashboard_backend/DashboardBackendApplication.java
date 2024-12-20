@@ -25,7 +25,7 @@ public class DashboardBackendApplication {
 			user.setPassword(encoder.encode("123456"));
 			repo.save(user);
 			SignInRequest request = new SignInRequest();
-			request.setUsername("admin");
+			request.setUsername("system-admin");
 			request.setPassword("123456");
 			System.out.println(uAuthService.signIn(request).getToken());
 		};

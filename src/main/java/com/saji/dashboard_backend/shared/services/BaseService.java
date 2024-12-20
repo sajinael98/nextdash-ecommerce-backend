@@ -34,11 +34,12 @@ public class BaseService<Entity extends BaseEntity, EntityDto extends BaseDto> {
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         Entity object = baseMapper.convertRequestToEntity(request);
         validate(object);
+        beforeSave(request, object);
         object = baseRepository.save(object);
         Entity savedObject = baseRepository.findById(object.getId()).get();
         return baseMapper.convertEntityToResponse(savedObject);
     }
-
+    
     @Transactional
     public BaseDto update(Long id, EntityDto request) {
         if (!baseRepository.existsById(id)) {
@@ -47,6 +48,7 @@ public class BaseService<Entity extends BaseEntity, EntityDto extends BaseDto> {
         Entity object = baseMapper.convertRequestToEntity(request);
         object.setId(id);
         validate(object);
+        beforeSave(request, object);
         object = baseRepository.save(object);
         return baseMapper.convertEntityToResponse(object);
     }
@@ -88,6 +90,9 @@ public class BaseService<Entity extends BaseEntity, EntityDto extends BaseDto> {
         baseRepository.deleteById(id);
     }
 
+    public void beforeSave(EntityDto entityDto, Entity entity){
+
+    }
     public void validate(Entity object) {
 
     }

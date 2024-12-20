@@ -8,7 +8,6 @@ import com.saji.dashboard_backend.shared.mappers.BaseMapper;
 
 @Service
 public class UserMapper implements BaseMapper<User, UserDto> {
-
     @Override
     public User createEntity() {
         return new User();

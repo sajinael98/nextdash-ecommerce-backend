@@ -1,88 +1,88 @@
 package com.saji.dashboard_backend.modules.user_managment.services;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.saji.dashboard_backend.modules.user_managment.dtos.PermissionDto;
-import com.saji.dashboard_backend.modules.user_managment.dtos.RoleDto;
 import com.saji.dashboard_backend.modules.user_managment.entities.Permission;
 import com.saji.dashboard_backend.modules.user_managment.entities.Role;
-import com.saji.dashboard_backend.modules.user_managment.mappers.PermissionMapper;
 import com.saji.dashboard_backend.modules.user_managment.mappers.RoleMapper;
-import com.saji.dashboard_backend.modules.user_managment.repositories.PermissionRepo;
 import com.saji.dashboard_backend.modules.user_managment.repositories.RoleRepo;
-import com.saji.dashboard_backend.shared.dtos.ListResponse;
-import com.saji.dashboard_backend.shared.services.BaseService;
+import com.saji.dashboard_backend.shared.services.EnhancedBaseService;
 
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
-public class RoleService extends BaseService<Role, RoleDto> {
-    private RoleRepo roleRepo;
-    private PermissionMapper permissionMapper;
-    private PermissionRepo permissionRepo;
+public class RoleService extends EnhancedBaseService<Role> {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    public RoleService(RoleRepo roleRepo, RoleMapper roleMapper, PermissionMapper permissionMapper,
-            PermissionRepo permissionRepo) {
-        super(roleRepo, roleMapper);
-        this.roleRepo = roleRepo;
-        this.permissionMapper = permissionMapper;
-        this.permissionRepo = permissionRepo;
+    private RoleRepo repo;
+
+    public RoleService(RoleRepo roleRepo, RoleMapper roleMapper) {
+        super(roleRepo);
+        this.repo = roleRepo;
     }
 
-    public ListResponse<PermissionDto> createPermission(Long roleId, PermissionDto permissionDto) {
-        Role role = getRoleById(roleId);
-        Permission permission = permissionMapper.convertRequestToEntity(permissionDto);
-        permission.setRole(role);
-        List<Permission> permissions = role.getPermissions();
-        permissions.add(permission);
-        role.setPermissions(permissions);
-        validate(role);
-        roleRepo.save(role);
-        return prepaListResponse(role);
+    public List<PermissionDto> getRolesPermissionsByResource(String resource) {
+        final String query = """
+                select
+                    `resource`,
+                    `create_resource` as `create`,
+                    `read_resource` as `read`,
+                    `update_resource` as `update`,
+                    `delete_resource` as `delete`,
+                    `role_id` as `roleId`,
+                    `role`
+                from `res_role_permissions`
+                where `resource` = ?
+                """;
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(PermissionDto.class), resource);
     }
 
-    public ListResponse<PermissionDto> deletePermission(Long roleId, Long permissionId) {
-        Role role = getRoleById(roleId);
-        role.getPermissions().removeIf(p -> p.getId() == permissionId);
-        permissionRepo.deleteById(permissionId);
-        roleRepo.save(role);
-        return prepaListResponse(role);
+    @Transactional
+    public void createRolePermission(PermissionDto request) {
+        var role = this.findEntityById(request.getRoleId());
+
+        Permission permission = createOrUpdatePermission(request);
+        role.addPermission(permission);
+        this.saveEntity(role);
     }
 
-    public ListResponse<PermissionDto> getPermissions(Long roleId) {
-        Role role = getRoleById(roleId);
-        return prepaListResponse(role);
+    @Transactional
+    public void updateRolePermission(long roleId, PermissionDto request) {
+        var role = this.findEntityById(roleId);
+        role.getPermissions().forEach(permission -> {
+            if (permission.getResource().equalsIgnoreCase(request.getResource())) {
+                updatePermission(permission, request);
+            }
+        });
+
+        this.saveEntity(role);
     }
 
-    private Role getRoleById(Long roleId) {
-        return roleRepo.findById(roleId)
-                .orElseThrow(() -> new EntityNotFoundException("Resource: roles with id " + roleId + " is not found."));
+    public void deleteRolesPermissionsByResource(long roleId, String resource) {
+        var role = this.findEntityById(roleId);
+        role.removePermission(resource);
+        this.saveEntity(role);
     }
 
-    private List<PermissionDto> getPermissionResponseList(Role role) {
-        return role.getPermissions().stream()
-                .map(p -> (PermissionDto) permissionMapper.convertEntityToResponse(p)).toList();
+    private Permission createOrUpdatePermission(PermissionDto request) {
+        Permission permission = new Permission();
+        updatePermission(permission, request);
+        return permission;
     }
 
-    private ListResponse<PermissionDto> prepaListResponse(Role role) {
-        List<PermissionDto> permissionResponses = getPermissionResponseList(role);
-        ListResponse<PermissionDto> response = new ListResponse<>();
-        response.setData(permissionResponses);
-        response.setTotal((long) permissionResponses.size());
-        return response;
-    }
-
-    @Override
-    public void validate(Role object) {
-        List<String> duplicatedPermissions = object.getPermissions().stream()
-                .collect(Collectors.groupingBy(Permission::getEntity)).entrySet().stream()
-                .filter(entry -> entry.getValue().size() > 1).map(entry -> entry.getKey()).toList();
-        if (duplicatedPermissions.size() > 0) {
-            throw new IllegalArgumentException("There are a duplicated permissions" + duplicatedPermissions);
-        }
+    private void updatePermission(Permission permission, PermissionDto request) {
+        permission.setResource(request.getResource());
+        permission.setCreate(request.isCreate());
+        permission.setRead(request.isRead());
+        permission.setUpdate(request.isUpdate());
+        permission.setDelete(request.isDelete());
     }
 
 }

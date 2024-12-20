@@ -1,5 +1,6 @@
 package com.saji.dashboard_backend.secuirty.services;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,29 +49,29 @@ public class AuthService {
         response.setUsername(user.getUsername());
         response.setToken(token);
         response.setId(user.getId());
-        response.setRoles(user.getRoles().stream().map(role -> role.getRole()).collect(Collectors.toSet()));
-        Set<String> permissions = new HashSet<>();
-        user.getRoles().forEach(role -> {
-            role.getPermissions().forEach(per -> {
-                if (per.isCreateR()) {
-                    permissions.add(
-                            PermissionUtils.customizePermission(per.getEntity(), "create"));
-                }
-                if (per.isReadR()) {
-                    permissions.add(
-                            PermissionUtils.customizePermission(per.getEntity(), "read"));
-                }
-                if (per.isEditR()) {
-                    permissions.add(
-                            PermissionUtils.customizePermission(per.getEntity(), "update"));
-                }
-                if (per.isDeleteR()) {
-                    permissions.add(
-                            PermissionUtils.customizePermission(per.getEntity(), "delete"));
-                }
-            });
-        });
-        response.setPermissions(permissions);
+        response.setRoles(Collections.emptySet());
+        // Set<String> permissions = new HashSet<>();
+        // user.getRoles().forEach(role -> {
+        //     role.getPermissions().forEach(per -> {
+        //         if (per.isCreateR()) {
+        //             permissions.add(
+        //                     PermissionUtils.customizePermission(per.getEntity(), "create"));
+        //         }
+        //         if (per.isReadR()) {
+        //             permissions.add(
+        //                     PermissionUtils.customizePermission(per.getEntity(), "read"));
+        //         }
+        //         if (per.isEditR()) {
+        //             permissions.add(
+        //                     PermissionUtils.customizePermission(per.getEntity(), "update"));
+        //         }
+        //         if (per.isDeleteR()) {
+        //             permissions.add(
+        //                     PermissionUtils.customizePermission(per.getEntity(), "delete"));
+        //         }
+        //     });
+        // });
+        response.setPermissions(Collections.EMPTY_SET);
         revokeAllUserTokens(user);
         saveUserToken(user, token);
 

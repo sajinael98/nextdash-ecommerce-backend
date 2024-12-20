@@ -1,41 +1,46 @@
 package com.saji.dashboard_backend.modules.user_managment.entities;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Embeddable;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
+@Embeddable
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "permissions")
-@ToString(exclude = "role")
-public class Permission extends BaseEntity{
+public class Permission {
     @Column(nullable = false)
-    private String entity;
-    
-    @Column(columnDefinition = "INT")
-    private boolean createR;
+    private String resource;
 
-    @Column(columnDefinition = "INT")
-    private boolean readR;
+    @Column(name = "create_resource", columnDefinition = "INT")
+    private boolean create;
 
-    @Column(columnDefinition = "INT")
-    private boolean editR;
+    @Column(name = "read_resource", columnDefinition = "INT")
+    private boolean read;
 
-    @Column(columnDefinition = "INT")
-    private boolean deleteR;
+    @Column(name = "update_resource", columnDefinition = "INT")
+    private boolean update;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @Column(name = "delete_resource", columnDefinition = "INT")
+    private boolean delete;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof Permission))
+            return false;
+        Permission permission = (Permission) o;
+        return resource.equalsIgnoreCase(permission.resource);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(resource);
+    }
+
+    public boolean isValid() {
+        return create || read || update || delete;
+    }
 }

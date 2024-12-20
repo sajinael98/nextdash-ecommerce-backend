@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity
-@Table(name = "files")
+// @Entity
+// @Table(name = "files")
 @Data
 public class FileMetadata {
 
