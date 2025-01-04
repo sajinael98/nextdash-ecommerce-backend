@@ -1,5 +1,7 @@
 package com.saji.dashboard_backend.modules.user_managment.entities;
 
+import com.saji.dashboard_backend.shared.entites.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,15 +19,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "tokens")
-public class Token {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Token extends BaseEntity {
     private String token;
     @Column(name = "expired", columnDefinition = "INT")
     private boolean expired;
-    
+
     @Column(name = "revoked", columnDefinition = "INT")
     private boolean revoked;
 
