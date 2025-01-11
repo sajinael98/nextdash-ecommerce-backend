@@ -23,9 +23,10 @@ CREATE Table IF NOT EXISTS `res_roles` (
 );
 
 CREATE Table IF NOT EXISTS `res_user_roles` (
-    user_id BIGINT,
-    role VARCHAR(25),
-    FOREIGN KEY (user_id) REFERENCES `res_sysusers` (id)
+    user_id BIGINT NOT NULL,
+    `role` VARCHAR(25),
+    FOREIGN KEY (user_id) REFERENCES `res_sysusers` (id),
+    FOREIGN KEY (`role`) REFERENCES `res_roles` (role)
 );
 
 CREATE Table IF NOT EXISTS `res_role_permissions` (

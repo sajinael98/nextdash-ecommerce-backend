@@ -2,6 +2,8 @@ package com.saji.dashboard_backend.secuirty.dtos;
 
 import java.util.Set;
 
+import com.saji.dashboard_backend.modules.user_managment.entities.Permission;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +17,5 @@ public class SignInResponse {
     private String email;
     private String token;
     private Set<String> roles;
-    private Set<String> permissions;
+    private Set<Permission> permissions;
 }

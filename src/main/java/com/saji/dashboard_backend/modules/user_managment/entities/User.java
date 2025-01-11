@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -43,19 +44,18 @@ public class User extends BaseEntity implements UserDetails {
     @Column
     private String password;
     
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", nullable = false), uniqueConstraints = @UniqueConstraint(columnNames = {
             "user_id" }))
     private Set<UserRole> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        // for (UserRole role : roles) {
-        //     authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().getRole().toUpperCase().replaceAll(" ", "_")));
-        //     authorities.addAll(role.getRole().getgrantedAuthorities());
-        // }
-        return Collections.emptyList();
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        for (UserRole role : roles) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().toUpperCase().replaceAll(" ", "_")));
+        }
+        return authorities;
     }
 
     @Override

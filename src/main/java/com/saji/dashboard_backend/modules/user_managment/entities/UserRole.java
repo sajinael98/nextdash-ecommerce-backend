@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Embeddable
 @Data
-public class UserRole {    
-    @Column
+public class UserRole {
+    @Column(nullable = false)
     private String role;
 }

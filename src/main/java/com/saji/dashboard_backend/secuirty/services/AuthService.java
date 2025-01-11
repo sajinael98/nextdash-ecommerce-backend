@@ -2,6 +2,7 @@ package com.saji.dashboard_backend.secuirty.services;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,8 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.saji.dashboard_backend.modules.user_managment.dtos.ChangePasswordRequest;
+import com.saji.dashboard_backend.modules.user_managment.entities.Permission;
+import com.saji.dashboard_backend.modules.user_managment.entities.Role;
 import com.saji.dashboard_backend.modules.user_managment.entities.Token;
 import com.saji.dashboard_backend.modules.user_managment.entities.User;
+import com.saji.dashboard_backend.modules.user_managment.repositories.RoleRepo;
 import com.saji.dashboard_backend.modules.user_managment.repositories.TokenRepo;
 import com.saji.dashboard_backend.modules.user_managment.repositories.UserRepo;
 import com.saji.dashboard_backend.secuirty.dtos.SignInRequest;
@@ -35,6 +39,8 @@ public class AuthService {
 
     private final PasswordEncoder encoder;
 
+    private final RoleRepo roleRepo;
+
     public SignInResponse signIn(SignInRequest request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -49,29 +55,15 @@ public class AuthService {
         response.setUsername(user.getUsername());
         response.setToken(token);
         response.setId(user.getId());
-        response.setRoles(Collections.emptySet());
-        // Set<String> permissions = new HashSet<>();
-        // user.getRoles().forEach(role -> {
-        //     role.getPermissions().forEach(per -> {
-        //         if (per.isCreateR()) {
-        //             permissions.add(
-        //                     PermissionUtils.customizePermission(per.getEntity(), "create"));
-        //         }
-        //         if (per.isReadR()) {
-        //             permissions.add(
-        //                     PermissionUtils.customizePermission(per.getEntity(), "read"));
-        //         }
-        //         if (per.isEditR()) {
-        //             permissions.add(
-        //                     PermissionUtils.customizePermission(per.getEntity(), "update"));
-        //         }
-        //         if (per.isDeleteR()) {
-        //             permissions.add(
-        //                     PermissionUtils.customizePermission(per.getEntity(), "delete"));
-        //         }
-        //     });
-        // });
-        response.setPermissions(Collections.EMPTY_SET);
+        List<String> roles = user.getRoles().stream().map(role -> role.getRole()).toList();
+        System.out.println(roles);
+        response.setRoles(new HashSet<>(roles));
+        List<Role> rolesList = roleRepo.findByRoleIn(roles);
+        System.out.println(rolesList);
+        Set<Permission> permissions = rolesList.stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .collect(Collectors.toSet());
+        response.setPermissions(permissions);
         revokeAllUserTokens(user);
         saveUserToken(user, token);
 
@@ -83,7 +75,7 @@ public class AuthService {
         String encodedPassword = encoder.encode(req.getPassword());
         User user = userRepo.findById(id).get();
         user.setPassword(encodedPassword);
-        
+
         userRepo.save(user);
     }
 
