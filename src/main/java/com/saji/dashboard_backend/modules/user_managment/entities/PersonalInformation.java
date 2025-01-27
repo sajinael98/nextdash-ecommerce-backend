@@ -6,7 +6,10 @@ import lombok.Data;
 
 @Embeddable
 @Data
-public class UserRole {
-    @Column(nullable = false, name = "role_id")
-    private long roleId;
+public class PersonalInformation {
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
 }

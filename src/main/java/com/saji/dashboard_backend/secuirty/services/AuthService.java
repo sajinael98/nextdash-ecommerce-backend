@@ -55,7 +55,7 @@ public class AuthService {
         response.setUsername(user.getUsername());
         response.setToken(token);
         response.setId(user.getId());
-        List<String> roles = user.getRoles().stream().map(role -> role.getRole()).toList();
+        List<String> roles = Collections.emptyList();
         System.out.println(roles);
         response.setRoles(new HashSet<>(roles));
         List<Role> rolesList = roleRepo.findByRoleIn(roles);

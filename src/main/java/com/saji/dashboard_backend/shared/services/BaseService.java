@@ -29,7 +29,7 @@ public class BaseService<Entity extends BaseEntity> {
     }
 
     public Entity update(Long id, Entity entity) {
-        if(!repo.existsById(id)){
+        if (!repo.existsById(id)) {
             new EntityNotFoundException("resource with id: " + id + " is not found.");
         }
         entity.setId(id);
@@ -55,12 +55,13 @@ public class BaseService<Entity extends BaseEntity> {
                 paginationFilter.getSize(), sort);
 
         Page<Entity> entities = repo.findAll(EntitySpecification.findList(valueFilters), pageable);
-        
+
         ListResponse<Entity> response = new ListResponse<>();
         response.setData(entities.getContent());
         response.setTotal(entities.getTotalElements());
         return response;
     }
+
     public void validate(Entity entity) {
 
     }
@@ -68,5 +69,9 @@ public class BaseService<Entity extends BaseEntity> {
     public Entity saveEntity(Entity entity) {
         validate(entity);
         return repo.save(entity);
+    }
+
+    public void deleteEntityById(Long id) {
+        repo.deleteById(id);
     }
 }

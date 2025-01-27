@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,5 +73,11 @@ public abstract class BaseController<Entity extends BaseEntity> {
         // headers.set("x-total-count", "" + response.getTotal());
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteResourceById(@PathVariable(name = "id") Long resourceId) {
+        service.deleteEntityById(resourceId);
+        return ResponseEntity.noContent().build();
     }
 }
