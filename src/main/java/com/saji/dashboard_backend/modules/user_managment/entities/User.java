@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.saji.dashboard_backend.shared.entites.BaseEntity;
 
 import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -35,28 +34,28 @@ public class User extends BaseEntity implements UserDetails {
     @Embedded
     private PersonalInformation personalInformation = new PersonalInformation();
 
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String email;
-
-    @Column
-    private String password;
+    @Embedded
+    private AccountInformation accountInformation = new AccountInformation();
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", nullable = false), uniqueConstraints = @UniqueConstraint(columnNames = {
-            "user_id" }))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "userId", nullable = false), uniqueConstraints = @UniqueConstraint(columnNames = {
+            "userId" }))
     private Set<UserRole> roles = new HashSet<>();
 
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        for (UserRole role : roles) {
-            // authorities.add(new SimpleGrantedAuthority("ROLE_" +
-            // role.getRole().toUpperCase().replaceAll(" ", "_")));
-        }
         return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.accountInformation.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.accountInformation.getUsername();
     }
 }

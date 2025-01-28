@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.saji.dashboard_backend.secuirty.utils.PermissionUtils;
 import com.saji.dashboard_backend.shared.entites.BaseEntity;
 
 import jakarta.persistence.CollectionTable;
@@ -35,34 +36,32 @@ public class Role extends BaseEntity {
     private boolean enabled = true;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "role_permissions", joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false), @JoinColumn(name = "role", referencedColumnName = "role", nullable = false)}, uniqueConstraints = @UniqueConstraint(columnNames = {
-            "role" }))
+    @CollectionTable(name = "role_permissions", joinColumns = {
+            @JoinColumn(name = "roleId", referencedColumnName = "id", nullable = false),
+            @JoinColumn(name = "role", referencedColumnName = "role", nullable = false) }, uniqueConstraints = @UniqueConstraint(columnNames = {
+                    "role" }))
     private Set<Permission> permissions = new HashSet<>();
 
     public List<SimpleGrantedAuthority> getgrantedAuthorities() {
         List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
-        // for (Permission p : permissions) {
-        // if (p.isCreateR()) {
-        // grantedAuthorities.add(new
-        // SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getEntity(),
-        // "create")));
-        // }
-        // if (p.isReadR()) {
-        // grantedAuthorities.add(new
-        // SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getEntity(),
-        // "read")));
-        // }
-        // if (p.isEditR()) {
-        // grantedAuthorities.add(new
-        // SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getEntity(),
-        // "update")));
-        // }
-        // if (p.isDeleteR()) {
-        // grantedAuthorities.add(new
-        // SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getEntity(),
-        // "delete")));
-        // }
-        // }
+        for (Permission p : permissions) {
+            if (p.isCreate()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getResource(),
+                        "create")));
+            }
+            if (p.isRead()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getResource(),
+                        "read")));
+            }
+            if (p.isUpdate()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getResource(),
+                        "update")));
+            }
+            if (p.isDelete()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(PermissionUtils.customizePermission(p.getResource(),
+                        "delete")));
+            }
+        }
         return grantedAuthorities;
     }
 

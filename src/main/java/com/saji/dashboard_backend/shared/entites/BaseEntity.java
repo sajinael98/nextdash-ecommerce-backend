@@ -30,19 +30,19 @@ public abstract class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false, name = "created_date")
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(name = "last_modified_date", insertable = false)
+    @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private Long createdBy = 0L;
 
     @LastModifiedBy
-    @Column(name = "last_modified_by", insertable = false)
+    @Column(insertable = false)
     private Long lastModifiedBy = 0L;
 
     @Override

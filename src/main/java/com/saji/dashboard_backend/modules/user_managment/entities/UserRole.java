@@ -7,6 +7,6 @@ import lombok.Data;
 @Embeddable
 @Data
 public class UserRole {
-    @Column(nullable = false, name = "role_id")
+    @Column(nullable = false)
     private long roleId;
 }

@@ -12,14 +12,16 @@ import com.saji.dashboard_backend.shared.repositories.BaseRepository;
 
 @Repository
 public interface UserRepo extends BaseRepository<User, Long> {
+    @Query("SELECT u FROM User u WHERE u.accountInformation.email = :email or u.accountInformation.username = :username")
     Optional<User> findByEmailOrUsername(String email, String username);
 
+    @Query("SELECT true FROM User u WHERE u.accountInformation.email = :email")
     boolean existsByEmail(String email);
 
-    @Query("SELECT u.id FROM User u WHERE u.email = :email")
+    @Query("SELECT u.id FROM User u WHERE u.accountInformation.email = :email")
     Long findIdByEmail(@Param("email") String email);
 
     @Modifying
-    @Query("update User u set u.password = :password where u.id = :id")
+    @Query("update User u set u.accountInformation.password = :password where u.id = :id")
     void changePassword(@Param("id") Long id, String password);
 }

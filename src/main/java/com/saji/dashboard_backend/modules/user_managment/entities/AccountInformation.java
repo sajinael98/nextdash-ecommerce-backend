@@ -6,10 +6,13 @@ import lombok.Data;
 
 @Embeddable
 @Data
-public class PersonalInformation {
-    @Column
-    private String firstName;
+public class AccountInformation {
+ @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String email;
 
     @Column
-    private String lastName;
+    private String password;
 }

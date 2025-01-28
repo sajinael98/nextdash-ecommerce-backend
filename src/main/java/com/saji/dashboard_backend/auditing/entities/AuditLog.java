@@ -30,7 +30,7 @@ public class AuditLog {
     @Column
     private String resource;
 
-    @Column(name = "resource_id") 
+    @Column
     private String resourceId;
 
     @Column
@@ -39,15 +39,15 @@ public class AuditLog {
     @Column
     private String data;
 
-    @Column(name = "previous_data")
+    @Column
     private String previousData;
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private Long createdBy;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false, name = "created_date")
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
 }

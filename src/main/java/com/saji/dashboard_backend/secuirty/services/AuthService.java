@@ -1,7 +1,5 @@
 package com.saji.dashboard_backend.secuirty.services;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,7 +19,6 @@ import com.saji.dashboard_backend.modules.user_managment.repositories.TokenRepo;
 import com.saji.dashboard_backend.modules.user_managment.repositories.UserRepo;
 import com.saji.dashboard_backend.secuirty.dtos.SignInRequest;
 import com.saji.dashboard_backend.secuirty.dtos.SignInResponse;
-import com.saji.dashboard_backend.secuirty.utils.PermissionUtils;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -51,16 +48,16 @@ public class AuthService {
 
         String token = jwtService.generateToken(user);
         SignInResponse response = new SignInResponse();
-        response.setEmail(user.getEmail());
+        response.setEmail(user.getAccountInformation().getEmail());
         response.setUsername(user.getUsername());
         response.setToken(token);
         response.setId(user.getId());
-        List<String> roles = Collections.emptyList();
+
+        List<Role> roles = roleRepo.findAllById(user.getRoles().stream().map(userRole -> userRole.getRoleId()).toList());
         System.out.println(roles);
-        response.setRoles(new HashSet<>(roles));
-        List<Role> rolesList = roleRepo.findByRoleIn(roles);
-        System.out.println(rolesList);
-        Set<Permission> permissions = rolesList.stream()
+        response.setRoles(roles.stream().map(role -> role.getRole()).collect(Collectors.toSet()));
+        
+        Set<Permission> permissions = roles.stream()
                 .flatMap(role -> role.getPermissions().stream())
                 .collect(Collectors.toSet());
         response.setPermissions(permissions);
@@ -74,7 +71,7 @@ public class AuthService {
     public void changePassword(Long id, ChangePasswordRequest req) {
         String encodedPassword = encoder.encode(req.getPassword());
         User user = userRepo.findById(id).get();
-        user.setPassword(encodedPassword);
+        user.getAccountInformation().setPassword(encodedPassword);
 
         userRepo.save(user);
     }

@@ -24,7 +24,7 @@ public class DashboardBackendApplication {
 	public CommandLineRunner run(PasswordEncoder encoder, UserRepo repo, AuthService uAuthService) {
 		return args -> {
 			User user = repo.findById(1L).get();
-			user.setPassword(encoder.encode("123456"));
+			user.getAccountInformation().setPassword(encoder.encode("123456"));
 			repo.save(user);
 			SignInRequest request = new SignInRequest();
 			request.setUsername("system-admin");

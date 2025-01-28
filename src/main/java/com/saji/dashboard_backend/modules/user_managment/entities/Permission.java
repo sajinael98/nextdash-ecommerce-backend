@@ -12,16 +12,16 @@ public class Permission {
     @Column(nullable = false)
     private String resource;
 
-    @Column(name = "create_resource", columnDefinition = "INT")
+    @Column(columnDefinition = "INT", name = "create_r")
     private boolean create;
 
-    @Column(name = "read_resource", columnDefinition = "INT")
+    @Column(columnDefinition = "INT", name = "read_r")
     private boolean read;
 
-    @Column(name = "update_resource", columnDefinition = "INT")
+    @Column(columnDefinition = "INT", name = "update_r")
     private boolean update;
 
-    @Column(name = "delete_resource", columnDefinition = "INT")
+    @Column(columnDefinition = "INT", name = "delete_r")
     private boolean delete;
 
     @Override
@@ -33,7 +33,6 @@ public class Permission {
         Permission permission = (Permission) o;
         return resource.equalsIgnoreCase(permission.resource);
     }
-
 
     @Override
     public int hashCode() {

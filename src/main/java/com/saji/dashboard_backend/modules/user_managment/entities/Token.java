@@ -21,13 +21,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "tokens")
 public class Token extends BaseEntity {
     private String token;
-    @Column(name = "expired", columnDefinition = "INT")
+    @Column(columnDefinition = "INT")
     private boolean expired;
 
-    @Column(name = "revoked", columnDefinition = "INT")
+    @Column(columnDefinition = "INT")
     private boolean revoked;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
 }
