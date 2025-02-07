@@ -5,17 +5,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.saji.dashboard_backend.secuirty.Interceptors.PermissionInterceptor;
+import com.saji.dashboard_backend.secuirty.Interceptors.request_validation.RequestValidatorChain;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
     @Autowired
-    private PermissionInterceptor permissionInterceptor;
+    private RequestValidatorChain requestValidatorChain;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(permissionInterceptor)
-                .addPathPatterns("/**"); // Apply to all endpoints
+        registry.addInterceptor(requestValidatorChain)
+                .addPathPatterns("/**") // Apply to all endpoints
+                .excludePathPatterns(new String[] { "/sys-auth/**", "/files" }); // Exclude whitelisted URLs
+
     }
 }

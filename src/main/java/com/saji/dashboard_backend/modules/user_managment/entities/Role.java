@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.saji.dashboard_backend.secuirty.utils.PermissionUtils;
 import com.saji.dashboard_backend.shared.entites.BaseEntity;
 
@@ -41,7 +42,8 @@ public class Role extends BaseEntity {
             @JoinColumn(name = "role", referencedColumnName = "role", nullable = false) }, uniqueConstraints = @UniqueConstraint(columnNames = {
                     "role" }))
     private Set<Permission> permissions = new HashSet<>();
-
+    
+    @JsonIgnore
     public List<SimpleGrantedAuthority> getgrantedAuthorities() {
         List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Permission p : permissions) {

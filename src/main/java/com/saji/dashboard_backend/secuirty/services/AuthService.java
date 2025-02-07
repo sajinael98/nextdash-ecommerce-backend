@@ -53,17 +53,18 @@ public class AuthService {
         response.setToken(token);
         response.setId(user.getId());
 
-        List<Role> roles = roleRepo.findAllById(user.getRoles().stream().map(userRole -> userRole.getRoleId()).toList());
-        System.out.println(roles);
-        response.setRoles(roles.stream().map(role -> role.getRole()).collect(Collectors.toSet()));
-        
-        Set<Permission> permissions = roles.stream()
-                .flatMap(role -> role.getPermissions().stream())
-                .collect(Collectors.toSet());
-        response.setPermissions(permissions);
+        if (user.getId() != 1) {
+            List<Role> roles = roleRepo
+                    .findAllById(user.getRoles().stream().map(userRole -> userRole.getRoleId()).toList());
+            response.setRoles(roles.stream().map(role -> role.getRole()).collect(Collectors.toSet()));
+
+            Set<Permission> permissions = roles.stream()
+                    .flatMap(role -> role.getPermissions().stream())
+                    .collect(Collectors.toSet());
+            response.setPermissions(permissions);
+        }
         revokeAllUserTokens(user);
         saveUserToken(user, token);
-
         return response;
     }
 

@@ -13,6 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.saji.dashboard_backend.modules.user_managment.repositories.UserRepo;
+import com.saji.dashboard_backend.secuirty.Interceptors.request_validation.PermissionValidator;
+import com.saji.dashboard_backend.secuirty.Interceptors.request_validation.RequestHeaderValidator;
+import com.saji.dashboard_backend.secuirty.Interceptors.request_validation.RequestValidator;
+import com.saji.dashboard_backend.secuirty.Interceptors.request_validation.UserValidator;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,5 +52,14 @@ public class AppConfig {
     @Bean
     public AuditorAware<Long> auditorAware() {
         return new ApplicationAuditingAware();
+    }
+
+    @Bean
+    public RequestValidator requestValidator(RequestHeaderValidator requestHeaderValidator,
+            UserValidator userValidator, PermissionValidator permissionValidator) {
+        userValidator.setNext(requestHeaderValidator);
+        requestHeaderValidator.setNext(permissionValidator);
+
+        return userValidator;
     }
 }
