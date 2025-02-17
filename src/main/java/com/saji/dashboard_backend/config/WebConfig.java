@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(requestValidatorChain)
                 .addPathPatterns("/**") // Apply to all endpoints
-                .excludePathPatterns(new String[] { "/sys-auth/**", "/files" }); // Exclude whitelisted URLs
-
+                .excludePathPatterns(new String[] { "/sys-auth/**", "/files/**" }); // Exclude whitelisted URLs
     }
 }

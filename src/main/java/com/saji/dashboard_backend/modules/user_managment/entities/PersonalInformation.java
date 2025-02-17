@@ -12,4 +12,7 @@ public class PersonalInformation {
 
     @Column
     private String lastName;
+
+    @Column
+    private String profileImage;
 }

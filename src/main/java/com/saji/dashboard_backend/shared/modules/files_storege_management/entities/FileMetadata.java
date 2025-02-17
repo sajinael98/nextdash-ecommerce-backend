@@ -2,18 +2,15 @@ package com.saji.dashboard_backend.shared.modules.files_storege_management.entit
 
 import java.time.LocalDateTime;
 
+import com.saji.dashboard_backend.shared.entites.BaseEntity;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
-// @Entity
-// @Table(name = "files")
+@Entity
+@Table(name = "files")
 @Data
-public class FileMetadata {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class FileMetadata extends BaseEntity {
     @Column(nullable = false)
     private String fileName;
 
@@ -23,6 +20,6 @@ public class FileMetadata {
     @Column(nullable = false)
     private Long fileSize;
 
-    @Column(name = "upload_date", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime uploadDate;
 }

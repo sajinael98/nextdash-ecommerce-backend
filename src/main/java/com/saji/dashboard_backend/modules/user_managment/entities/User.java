@@ -53,7 +53,7 @@ public class User extends BaseEntity implements UserDetails {
     public String getPassword() {
         return this.accountInformation.getPassword();
     }
-
+    
     @Override
     public String getUsername() {
         return this.accountInformation.getUsername();

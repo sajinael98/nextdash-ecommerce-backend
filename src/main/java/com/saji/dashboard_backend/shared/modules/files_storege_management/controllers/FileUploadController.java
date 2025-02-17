@@ -16,30 +16,30 @@ import com.saji.dashboard_backend.shared.modules.files_storege_management.servic
 
 import lombok.RequiredArgsConstructor;
 
-// @RestController
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/files")
 public class FileUploadController {
 
-    // private final FileStorageService fileStorageService;
+    private final FileStorageService fileStorageService;
 
-    // @PostMapping("/upload")
-    // public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-    //     try {
-    //         return ResponseEntity.ok(fileStorageService.storeFile(file));
-    //     } catch (IOException e) {
-    //         return ResponseEntity.status(500).body("Upload failed: " + e.getMessage());
-    //     }
-    // }
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            return ResponseEntity.ok(fileStorageService.storeFile(file));
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Upload failed: " + e.getMessage());
+        }
+    }
 
-    // @GetMapping("/{filename}")
-    // public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
-    //     try {
-    //         return ResponseEntity.ok()
-    //                 .contentType(MediaType.IMAGE_JPEG) // Adjust content type based on image format
-    //                 .body(fileStorageService.getFile(filename));
-    //     } catch (IOException e) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    // }
+    @GetMapping("/{filename}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
+        try {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // Adjust content type based on image format
+                    .body(fileStorageService.getFile(filename));
+        } catch (IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
