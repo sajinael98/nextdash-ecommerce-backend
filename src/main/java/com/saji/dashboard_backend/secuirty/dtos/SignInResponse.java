@@ -16,6 +16,8 @@ public class SignInResponse {
     private String username;
     private String email;
     private String token;
+    private String profileImage;
     private Set<String> roles;
     private Set<Permission> permissions;
+    private String fullName;
 }
