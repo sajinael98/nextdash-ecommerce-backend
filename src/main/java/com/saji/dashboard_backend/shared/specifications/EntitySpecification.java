@@ -22,11 +22,17 @@ public class EntitySpecification<T> {
                     System.out.println("Filtering by: " + condition.getField() + " = " + condition.getValue());
                     Predicate predicate;
                     if (condition.getOperator().equals("eq")) {
-                        predicate = cb.equal(root.get(condition.getField()), condition.getValue());
+                        String[] splitedString = condition.getField().split("_");
+                        if (splitedString.length == 1) {
+                            predicate = cb.equal(root.get(condition.getField()), condition.getValue());
+                        } else {
+                            predicate = cb.equal(root.get(splitedString[0]).get(splitedString[1]),
+                                    condition.getValue());
+                        }
                     } else if (condition.getOperator().equals("contains")) {
                         predicate = cb.like(cb.lower(root.get(condition.getField())), "%" + condition.getValue() + "%");
                     } else {
-                        throw new IllegalArgumentException("invalid operation: "+ condition.getOperator());
+                        throw new IllegalArgumentException("invalid operation: " + condition.getOperator());
                     }
 
                     // Combine predicates based on filter type
