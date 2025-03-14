@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,5 +28,15 @@ public class ResourceController {
     @GetMapping("/{id}/permissions")
     public ResponseEntity<List<Permission>> getResourcePermissions(@PathVariable String resource){
         return ResponseEntity.ok().body(service.getResourcePermissions(resource));
-    }   
+    }
+    
+    @PatchMapping("/{resource}/{id}")
+    public void updateValue(@PathVariable(required = true) String resource, @PathVariable Long id, @RequestBody UpdateResourceValue updateResourceValue){
+        service.updateValue(resource, id, updateResourceValue.column(), updateResourceValue.value());
+    }
+}
+
+
+record UpdateResourceValue(String column, Object value){
+
 }

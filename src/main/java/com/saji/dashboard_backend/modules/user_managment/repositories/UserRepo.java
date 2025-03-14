@@ -24,4 +24,8 @@ public interface UserRepo extends BaseRepository<User, Long> {
     @Modifying
     @Query("update User u set u.accountInformation.password = :password where u.id = :id")
     void changePassword(@Param("id") Long id, String password);
+
+    @Modifying
+    @Query("update User u set u.accountInformation.email = :email, u.personalInformation.firstName = :firstName, u.personalInformation.lastName = :lastName where u.id = :id")
+    void updateUserProfile(String email, String firstName, String lastName, Long id);
 }

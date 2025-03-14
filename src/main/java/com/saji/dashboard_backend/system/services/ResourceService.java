@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
@@ -62,6 +61,16 @@ public class ResourceService {
         } catch (DataAccessException e) {
             throw new RuntimeException("Failed to fetch resource permissions", e);
         }
+    }
+
+    public void updateValue(String resource, Long resourceId, String column, Object value) {
+        String query = String.format("""
+                UPDATE %s
+                SET %s = ?
+                WHERE id = ?
+                """, "res_" + resource, column);
+
+        jdbcTemplate.update(query, value, resourceId);
     }
 
     private String getDatabaseName() {

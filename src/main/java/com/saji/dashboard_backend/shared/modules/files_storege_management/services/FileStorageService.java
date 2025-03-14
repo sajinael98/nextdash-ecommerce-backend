@@ -35,15 +35,9 @@ public class FileStorageService {
         if (!Files.exists(directoryPath)) {
             Files.createDirectories(directoryPath); // Create the directory
         }
-
+        String fileName = renameFile(file);
         // Create a new file in the upload directory
-        File newFile = new File(directoryPath.toFile(), file.getOriginalFilename());
-
-        // Check if the file already exists and handle accordingly
-        if (newFile.exists()) {
-            String newFileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            newFile = new File(directoryPath.toFile(), newFileName);
-        }
+        File newFile = new File(directoryPath.toFile(), fileName);
 
         // Write the file content using InputStream
         InputStream inputStream = file.getInputStream();
@@ -58,14 +52,14 @@ public class FileStorageService {
 
         // Create and save file metadata
         FileMetadata metadata = new FileMetadata();
-        metadata.setFileName(file.getOriginalFilename());
+        metadata.setFileName(fileName);
         metadata.setFileType(file.getContentType());
         metadata.setFileSize(file.getSize());
         metadata.setUploadDate(LocalDateTime.now());
 
         fileMetadataRepository.save(metadata);
 
-        return file.getOriginalFilename();
+        return fileName;
     }
 
     public byte[] getFile(String filename) throws IOException {
@@ -99,4 +93,38 @@ public class FileStorageService {
         fileMetadataRepository.deleteByFileName(filename);
     }
 
+    public static String renameFile(MultipartFile multipartFile) throws IOException {
+        // Get the original file name and extension
+        String originalFileName = multipartFile.getOriginalFilename();
+        if (originalFileName == null) {
+            throw new IllegalArgumentException("File name cannot be null");
+        }
+
+        String extension = "";
+        int dotIndex = originalFileName.lastIndexOf('.');
+        if (dotIndex > 0) {
+            extension = originalFileName.substring(dotIndex);
+        }
+
+        // Get the base name without extension
+        String baseName = originalFileName.substring(0, dotIndex > 0 ? dotIndex : originalFileName.length());
+
+        // Generate a unique identifier (timestamp)
+        String uniqueSuffix = String.valueOf(System.currentTimeMillis());
+
+        // Create the new file name
+        String newFileName = baseName + "_" + uniqueSuffix + extension;
+
+        // Check for conflicts (in the current directory)
+        Path newPath = Paths.get(newFileName);
+        int counter = 1;
+        while (Files.exists(newPath)) {
+            newFileName = baseName + "_" + uniqueSuffix + "_" + counter + extension;
+            newPath = Paths.get(newFileName);
+            counter++;
+        }
+
+        // Return the final unique file name
+        return newPath.toString();
+    }
 }
