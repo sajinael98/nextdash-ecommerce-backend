@@ -5,6 +5,7 @@ CREATE Table IF NOT EXISTS `res_sysusers` (
     email VARCHAR(255) UNIQUE,
     password TEXT,
     username TEXT,
+    profileImage TEXT,
     createdDate DATETIME NOT NULL DEFAULT now(),
     lastModifiedDate DATETIME DEFAULT NULL DEFAULT now(),
     createdBy BIGINT NOT NULL DEFAULT 0,
