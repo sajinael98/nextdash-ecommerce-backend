@@ -1,6 +1,9 @@
 package com.saji.dashboard_backend.shared.specifications;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
@@ -16,7 +19,6 @@ public class EntitySpecification<T> {
             }
 
             Predicate finalPredicate = cb.conjunction(); // Start with a true predicate
-
             for (ValueFilter condition : valueFilters) {
                 if (condition.getField() != null && condition.getValue() != null) {
                     System.out.println("Filtering by: " + condition.getField() + " = " + condition.getValue());
@@ -31,6 +33,8 @@ public class EntitySpecification<T> {
                         }
                     } else if (condition.getOperator().equals("contains")) {
                         predicate = cb.like(cb.lower(root.get(condition.getField())), "%" + condition.getValue() + "%");
+                    } else if (condition.getOperator().equals("in")) {
+                        predicate = root.get(condition.getField()).in((ArrayList) condition.getValue());
                     } else {
                         throw new IllegalArgumentException("invalid operation: " + condition.getOperator());
                     }

@@ -1,5 +1,6 @@
 package com.saji.dashboard_backend.shared.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,15 @@ public class FieldFilterExtractor implements FilterExtractor<Collection<ValueFil
                 } else if (ValueFilterValidator.isValueFilterOperator(key)) {
                     temp.get(keyNumber).setOperator(value.toString());
                 } else if (ValueFilterValidator.isValueFilterValue(key)) {
-                    temp.get(keyNumber).setValue(parser.parseValue(value));
+                    ValueFilter valueFilter = temp.get(keyNumber);
+                    if(valueFilter.getOperator().equals("in")){
+                        if(valueFilter.getValue() == null){
+                            valueFilter.setValue(new ArrayList<>());
+                        }
+                        ((ArrayList)valueFilter.getValue()).add(parser.parseValue(value));
+                    }else{
+                        valueFilter.setValue(parser.parseValue(value));
+                    }
                 }
             }
         }
