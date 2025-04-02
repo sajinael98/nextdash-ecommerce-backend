@@ -74,3 +74,21 @@ CREATE TABLE IF NOT EXISTS `res_item_variants` (
     FOREIGN KEY (`variantId`) REFERENCES `res_variants`(`id`),
     PRIMARY KEY (`itemId`, `variantId`)
 );
+
+CREATE TABLE IF NOT EXISTS `res_uoms`(
+    `uom` VARCHAR(25) NOT NULL,
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `createdDate` DATETIME NOT NULL DEFAULT NOW(),
+    `lastModifiedDate` DATETIME DEFAULT NOW(),
+    `createdBy` BIGINT NOT NULL DEFAULT 0,
+    `lastModifiedBy` BIGINT DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `res_item_uoms` (
+    `itemId` BIGINT NOT NULL,
+    `uomId` BIGINT NOT NULL,
+    `value` FLOAT,
+    FOREIGN KEY (`itemId`) REFERENCES `res_items`(`id`),
+    FOREIGN KEY (`uomId`) REFERENCES `res_uoms`(`id`),
+    PRIMARY KEY (`itemId`, `uomId`)
+);
