@@ -125,8 +125,10 @@ CREATE TABLE IF NOT EXISTS `res_demos` (
 
 -- ===================== Settings =====================
 CREATE TABLE IF NOT EXISTS `res_settings` (
-    `title` VARCHAR(25) NOT NULL,
+    `title` VARCHAR(25) NOT NULL UNIQUE,
     `data` JSON NOT NULL,
+    `Id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `status` TINYINT DEFAULT 0 CHECK (`status` IN (0, 1)),
     `createdDate` DATETIME NOT NULL DEFAULT now(),
     `lastModifiedDate` DATETIME DEFAULT now(),
     `createdBy` BIGINT NOT NULL DEFAULT 0,

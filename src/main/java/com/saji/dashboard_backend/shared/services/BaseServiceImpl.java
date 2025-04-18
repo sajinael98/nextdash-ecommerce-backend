@@ -105,13 +105,17 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     }
 
     @Override
-    public List<Map<String, Object>> getList(List<String> fields, List<SearchCriteria> filters) {
+    public ListResponse<Map<String, Object>>  getList(List<String> fields, List<SearchCriteria> filters) {
         String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]
                 .getTypeName();
         Class<T> clazz;
         try {
             clazz = (Class<T>) Class.forName(className);
-            return repo.fetchValues(clazz, fields, filters);
+            var values = repo.fetchValues(clazz, fields, filters);
+            ListResponse<Map<String, Object>> response = new ListResponse<Map<String, Object>>();
+            response.setData(values);
+            response.setTotal((long) values.size());
+            return response;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e.getMessage());
         }

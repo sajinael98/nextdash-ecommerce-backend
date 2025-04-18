@@ -19,7 +19,7 @@ public interface BaseService<T extends BaseEntity> {
 
     ListResponse<T> getList(List<SearchCriteria> filters, List<SortCriteria> sorts, Pageable defaultPageable);
 
-    List<Map<String, Object>> getList(List<String> fields,
+     ListResponse<Map<String, Object>>  getList(List<String> fields,
             List<SearchCriteria> filters);
 
     void deleteEntityById(Long id);
