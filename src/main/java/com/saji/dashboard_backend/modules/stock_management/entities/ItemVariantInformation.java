@@ -18,7 +18,10 @@ public class ItemVariantInformation {
     private boolean hasSubItems;
 
     @Column
-    private Long template;
+    private Long templateId;
+
+    @Column
+    private String template;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "item_variants", joinColumns = @JoinColumn(name = "itemId", nullable = false))

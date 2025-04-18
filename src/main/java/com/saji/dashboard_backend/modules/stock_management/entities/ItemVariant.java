@@ -11,5 +11,8 @@ public class ItemVariant {
     private Long variantId;
 
     @Column
+    private String variant;
+    
+    @Column
     private String value;
 }

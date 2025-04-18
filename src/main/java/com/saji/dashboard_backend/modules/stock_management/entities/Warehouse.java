@@ -20,4 +20,7 @@ public class Warehouse extends BaseEntity {
 
     @Column(nullable = false)
     private long locationId;
+
+    @Column
+    private String location;
 }

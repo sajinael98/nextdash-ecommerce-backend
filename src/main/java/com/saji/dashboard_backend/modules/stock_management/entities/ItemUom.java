@@ -11,5 +11,8 @@ public class ItemUom {
     private Long uomId;
 
     @Column
+    private String uom;
+
+    @Column
     private Double value;
 }

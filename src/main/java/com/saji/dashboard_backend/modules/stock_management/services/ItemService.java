@@ -1,29 +1,25 @@
 package com.saji.dashboard_backend.modules.stock_management.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
 import com.saji.dashboard_backend.modules.stock_management.entities.Item;
 import com.saji.dashboard_backend.modules.stock_management.entities.ItemVariant;
 import com.saji.dashboard_backend.modules.stock_management.entities.ItemVariantInformation;
 import com.saji.dashboard_backend.modules.stock_management.repositories.ItemRepo;
-import com.saji.dashboard_backend.shared.services.BaseService;
-import com.saji.dashboard_backend.system.services.ResourceDbService;
+import com.saji.dashboard_backend.shared.services.BaseServiceImpl;
 
 @Service
-public class ItemService extends BaseService<Item> {
+public class ItemService extends BaseServiceImpl<Item> {
     private ItemRepo repo;
-
-    @Autowired
-    private ResourceDbService resourceDbService;
 
     public ItemService(ItemRepo repo) {
         super(repo);
@@ -54,41 +50,76 @@ public class ItemService extends BaseService<Item> {
     }
 
     public void createSubItems(Long itemId, Map<String, String[]> variantValues) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", itemId);
-        var results = resourceDbService.getResourceValues("res_items", List.of("title"), List.of("id=:id"), params);
-        String itemTitle = (String) results.get(0).get("title");
+        // Fetch the template item
+        Item templateItem = this.findEntityById(itemId);
+        String itemTitle = templateItem.getTitle();
+
+        // Generate all combinations of variant values
         List<String> subItemsName = new ArrayList<>();
         List<String> keys = new ArrayList<>(variantValues.keySet());
-
         combine(variantValues, keys, 0, "", subItemsName);
 
+        // Precompute reverse lookup for variant values
+        Map<String, String> valueToKeyMap = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : variantValues.entrySet()) {
+            for (String value : entry.getValue()) {
+                valueToKeyMap.put(value, entry.getKey());
+            }
+        }
+
+        // Create sub-items
         List<Item> subItems = new ArrayList<>();
         for (String combination : subItemsName) {
             Item item = new Item();
             item.setTitle(itemTitle + "-" + combination);
             item.setEnabled(true);
 
-            ItemVariantInformation info = new ItemVariantInformation();
-            info.setTemplate(itemId);
-            var spliitedStr = combination.split("-");
-            Set<ItemVariant> values = new HashSet<>();
-            for (String variantValue : spliitedStr) {
-                String variantId = variantValues.entrySet().stream()
-                        .filter(entry -> java.util.Arrays.asList(entry.getValue()).contains(
-                                variantValue))
-                        .map(Map.Entry::getKey)
-                        .findFirst().orElse(null);
-                ItemVariant variant = new ItemVariant();
-                variant.setVariantId(Long.parseLong(variantId));
-                variant.setValue(variantValue);
-                values.add(variant);
-            }
-            info.setValues(values);
-            item.setVariantInformation(info);
+            // Prepare variant information
+            ItemVariantInformation variantInfo = new ItemVariantInformation();
+            variantInfo.setTemplateId(itemId);
+            variantInfo.setTemplate(templateItem.getTitle());
+
+            Set<ItemVariant> values = Arrays.stream(combination.split("-"))
+                    .map(variantValue -> createItemVariant(templateItem, valueToKeyMap, variantValue))
+                    .collect(Collectors.toSet());
+
+            variantInfo.setValues(values);
+            item.setVariantInformation(variantInfo);
+            item.setUoms(new HashSet<>(templateItem.getUoms()));
             subItems.add(item);
         }
+
+        // Save all sub-items
         repo.saveAll(subItems);
+    }
+
+    // Helper method to create an ItemVariant
+    private ItemVariant createItemVariant(Item templateItem, Map<String, String> valueToKeyMap, String variantValue) {
+        String key = valueToKeyMap.get(variantValue);
+        if (key == null) {
+            throw new IllegalArgumentException("Variant value '" + variantValue + "' not found in variantValues map");
+        }
+
+        Long variantId = Long.parseLong(key);
+        return templateItem.getVariantInformation().getValues().stream()
+                .filter(v -> v.getVariantId().equals(variantId))
+                .map(templateVariant -> {
+                    ItemVariant variant = new ItemVariant();
+                    variant.setVariantId(variantId);
+                    variant.setVariant(templateVariant.getVariant());
+                    variant.setValue(variantValue);
+                    return variant;
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Variant with id: " + variantId + " not found"));
+    }
+
+    public List<Map<String, Object>> getItemUoms(Long itemId) {
+        return repo.getItemUoms(itemId);
+    }
+
+    public Double getItemUomFactor(Long itemId, Long uomId) {
+        return repo.getItemUomFactor(itemId, uomId);
     }
 
     private static void combine(Map<String, String[]> variantValues, List<String> keys,
