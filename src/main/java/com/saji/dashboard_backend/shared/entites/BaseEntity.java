@@ -1,5 +1,6 @@
 package com.saji.dashboard_backend.shared.entites;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,6 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,10 +27,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;  // ضمان التوافق بين الإصدارات
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private EntityStatus status = EntityStatus.DRAFT; // Default status
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -24,12 +24,12 @@ public class LogoutService implements LogoutHandler {
             return;
         }
         jwt = authHeader.substring(7);
-        var storedToken = this.tokenRepo.findByToken(jwt).orElse(null);
-        if (storedToken != null) {
-            storedToken.setExpired(true);
-            storedToken.setRevoked(true);
-            tokenRepo.save(storedToken);
-        }
+        // var storedToken = this.tokenRepo.findByToken(jwt).orElse(null);
+        // if (storedToken != null) {
+        //     storedToken.setExpired(true);
+        //     storedToken.setRevoked(true);
+        //     tokenRepo.save(storedToken);
+        // }
     }
 
 }

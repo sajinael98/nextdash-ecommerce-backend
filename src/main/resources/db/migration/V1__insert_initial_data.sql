@@ -1,5 +1,6 @@
 CREATE Table IF NOT EXISTS `res_sysusers` (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `status` TINYINT DEFAULT 0,
     firstName VARCHAR(25),
     lastName VARCHAR(25),
     email VARCHAR(255) UNIQUE,
@@ -14,6 +15,7 @@ CREATE Table IF NOT EXISTS `res_sysusers` (
 
 CREATE Table IF NOT EXISTS `res_roles` (
     id BIGINT AUTO_INCREMENT,
+    `status` TINYINT DEFAULT 0,
     `enabled` TINYINT(1),
     role VARCHAR(25) UNIQUE,
     createdDate DATETIME NOT NULL DEFAULT now(),
@@ -42,9 +44,9 @@ CREATE Table IF NOT EXISTS `res_role_permissions` (
 );
 
 -- CREATE INDEX idx_roles_role ON res_roles(role);
-
 CREATE Table IF NOT EXISTS `res_tokens` (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `status` TINYINT DEFAULT 0,
     token TEXT,
     expired TINYINT(1),
     revoked TINYINT(1),
@@ -58,6 +60,7 @@ CREATE Table IF NOT EXISTS `res_tokens` (
 
 CREATE TABLE IF NOT EXISTS `res_files` (
     id SERIAL PRIMARY KEY,
+    `status` TINYINT DEFAULT 0,
     fileName VARCHAR(255) NOT NULL UNIQUE,
     fileType VARCHAR(50) NOT NULL,
     fileSize BIGINT NOT NULL,
@@ -70,18 +73,20 @@ CREATE TABLE IF NOT EXISTS `res_files` (
 
 CREATE TABLE `res_audit_logs` (
     Id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `status` TINYINT DEFAULT 0,
     username VARCHAR(25) NOT NULL,
     resource VARCHAR(255) NOT NULL,
     resourceId VARCHAR(255),
     action VARCHAR(255) NOT NULL,
     createdBy BIGINT,
     createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `data` Text ,
+    `data` Text,
     previousData Text
 );
 
 CREATE Table `res_demos` (
     Id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `status` TINYINT DEFAULT 0,
     createdDate DATETIME NOT NULL DEFAULT now(),
     lastModifiedDate DATETIME DEFAULT NULL DEFAULT now(),
     createdBy BIGINT NOT NULL DEFAULT 0,

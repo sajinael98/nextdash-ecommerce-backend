@@ -15,19 +15,6 @@ import com.saji.dashboard_backend.shared.controllers.BaseController;
 
 @RestController
 @RequestMapping("/users")
-public class UserController extends BaseController<User> {
-    private UserService service;
-
-    public UserController(UserService service) {
-        super(service);
-        this.service = service;
-    }
-
-    @PatchMapping("/{id}/update-profile")
-    @PreAuthorize("#userId == authentication.principal.id")
-    public ResponseEntity<Void> updateUserProfile(@PathVariable(required = true, name = "id") long userId,
-            @RequestBody UpdateUserProfile profile) {
-        service.updateProfile(userId, profile);
-        return ResponseEntity.ok().build();
-    }
+public class UserController{
+   
 }
