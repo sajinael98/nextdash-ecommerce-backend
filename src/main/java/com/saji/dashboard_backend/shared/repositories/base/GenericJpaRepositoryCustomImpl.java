@@ -43,14 +43,14 @@ public class GenericJpaRepositoryCustomImpl<T, ID extends Serializable>
         Root<T> root = query.from(entityClass);
 
         List<Selection<?>> selections = fields.stream()
-                .map(f -> root.get(f).alias(f))
+                .map(f -> getPath(root, f).alias(f))
                 .collect(Collectors.toList());
 
         query.multiselect(selections);
 
         List<Predicate> predicates = new ArrayList<>();
         for (SearchCriteria sc : filters) {
-            Path<Object> path = root.get(sc.getField());
+            Path<Object> path = getPath(root, sc.getField());
             Object value = parseValue(sc.getValue(), path.getJavaType());
 
             switch (sc.getOperation()) {
@@ -71,7 +71,7 @@ public class GenericJpaRepositoryCustomImpl<T, ID extends Serializable>
                 .map(t -> {
                     Map<String, Object> row = new HashMap<>();
                     for (String f : fields) {
-                        row.put(f, t.get(f));
+                        row.put(f, t.get(f)); // alias is same as field name
                     }
                     return row;
                 })
@@ -94,5 +94,14 @@ public class GenericJpaRepositoryCustomImpl<T, ID extends Serializable>
         if (type == LocalDateTime.class)
             return LocalDateTime.parse(value);
         return value;
+    }
+
+    private Path<Object> getPath(Root<T> root, String fieldName) {
+        String[] parts = fieldName.split("\\.");
+        Path<Object> path = root.get(parts[0]);
+        for (int i = 1; i < parts.length; i++) {
+            path = path.get(parts[i]);
+        }
+        return path;
     }
 }

@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;  // ضمان التوافق بين الإصدارات
+    private static final long serialVersionUID = 1L; // ضمان التوافق بين الإصدارات
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ public abstract class BaseEntity implements Serializable {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private EntityStatus status = EntityStatus.DRAFT; // Default status
+    private ResourceStatus status = ResourceStatus.DRAFT; // Default status
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

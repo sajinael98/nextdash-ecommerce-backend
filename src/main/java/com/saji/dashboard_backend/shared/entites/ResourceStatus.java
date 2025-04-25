@@ -1,6 +1,6 @@
 package com.saji.dashboard_backend.shared.entites;
 
-public enum EntityStatus {
+public enum ResourceStatus {
     DRAFT,
     CONFIRMED;
 }

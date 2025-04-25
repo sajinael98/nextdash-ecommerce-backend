@@ -27,4 +27,7 @@ public interface BaseService<T extends BaseEntity> {
     void confirmResource(Long id);
 
     void cancelResource(Long id);
+
+    void beforeSave(T entity);
+    void afterSave(T entity);
 }

@@ -2,6 +2,7 @@ package com.saji.dashboard_backend.shared.services;
 
 import com.saji.dashboard_backend.shared.dtos.ListResponse;
 import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.ResourceStatus;
 import com.saji.dashboard_backend.shared.repositories.base.GenericJpaRepository;
 import com.saji.dashboard_backend.shared.specifications.GenericSpecification;
 import com.saji.dashboard_backend.shared.specifications.QueryCriteriaBuilder;
@@ -77,6 +78,11 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     @Transactional
     public void confirmResource(Long id) {
         var entity = findEntityById(id);
+        if (entity.getStatus() == ResourceStatus.CONFIRMED) {
+            throw new RuntimeException("resource with id: " + id + " is already confirmed.");
+        }
+        entity.setStatus(ResourceStatus.CONFIRMED);
+        entity = repo.save(entity);
         afterConfirm(entity);
     }
 
@@ -84,6 +90,11 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     @Transactional
     public void cancelResource(Long id) {
         var entity = findEntityById(id);
+        if (entity.getStatus() == ResourceStatus.DRAFT) {
+            throw new RuntimeException("resource with id: " + id + " is already canceled.");
+        }
+        entity.setStatus(ResourceStatus.DRAFT);
+        entity = repo.save(entity);
         afterCancel(entity);
     }
 
@@ -92,8 +103,11 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     }
 
     protected T saveEntity(T entity) {
+        beforeSave(entity);
         validate(entity);
-        return repo.save(entity);
+        entity = repo.save(entity);
+        afterSave(entity);
+        return entity;
     }
 
     @Transactional
@@ -105,7 +119,7 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
     }
 
     @Override
-    public ListResponse<Map<String, Object>>  getList(List<String> fields, List<SearchCriteria> filters) {
+    public ListResponse<Map<String, Object>> getList(List<String> fields, List<SearchCriteria> filters) {
         String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]
                 .getTypeName();
         Class<T> clazz;
@@ -119,5 +133,13 @@ public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public void beforeSave(T entity) {
+    }
+
+    @Override
+    public void afterSave(T entity) {
     }
 }
