@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseResource implements Serializable {
 
     private static final long serialVersionUID = 1L; // ضمان التوافق بين الإصدارات
 
@@ -59,9 +59,9 @@ public abstract class BaseEntity implements Serializable {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof BaseEntity))
+        if (!(o instanceof BaseResource))
             return false;
-        BaseEntity that = (BaseEntity) o;
+        BaseResource that = (BaseResource) o;
         return id != null && id.equals(that.id);
     }
 

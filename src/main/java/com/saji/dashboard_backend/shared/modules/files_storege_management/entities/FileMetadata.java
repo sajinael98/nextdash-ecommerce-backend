@@ -2,7 +2,7 @@ package com.saji.dashboard_backend.shared.modules.files_storege_management.entit
 
 import java.time.LocalDateTime;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
 @Entity
 @Table(name = "files")
 @Data
-public class FileMetadata extends BaseEntity {
+public class FileMetadata extends BaseResource {
     @Column(nullable = false)
     private String fileName;
 

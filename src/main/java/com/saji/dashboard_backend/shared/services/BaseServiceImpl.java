@@ -1,7 +1,7 @@
 package com.saji.dashboard_backend.shared.services;
 
 import com.saji.dashboard_backend.shared.dtos.ListResponse;
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 import com.saji.dashboard_backend.shared.entites.ResourceStatus;
 import com.saji.dashboard_backend.shared.repositories.base.GenericJpaRepository;
 import com.saji.dashboard_backend.shared.specifications.GenericSpecification;
@@ -19,7 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
-public class BaseServiceImpl<T extends BaseEntity> implements BaseService<T> {
+public class BaseServiceImpl<T extends BaseResource> implements BaseService<T> {
 
     private final GenericJpaRepository<T, Long> repo;
 

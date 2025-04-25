@@ -2,7 +2,7 @@ package com.saji.dashboard_backend.shared.dtos;
 
 import java.util.List;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import lombok.Data;
 

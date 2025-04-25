@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.saji.dashboard_backend.secuirty.utils.PermissionUtils;
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "roles")
 
-public class Role extends BaseEntity {
+public class Role extends BaseResource {
     @Column(nullable = false, length = 25)
     private String role;
 

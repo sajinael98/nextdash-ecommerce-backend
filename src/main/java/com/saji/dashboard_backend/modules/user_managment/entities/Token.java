@@ -1,6 +1,6 @@
 package com.saji.dashboard_backend.modules.user_managment.entities;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "tokens")
-public class Token extends BaseEntity {
+public class Token extends BaseResource {
     private String token;
     @Column(columnDefinition = "INT")
     private boolean expired;

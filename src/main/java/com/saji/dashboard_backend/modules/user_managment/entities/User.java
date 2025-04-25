@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "sysusers")
 @JsonIgnoreProperties({ "password" })
 @Data
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseResource implements UserDetails {
     @Embedded
     private PersonalInformation personalInformation = new PersonalInformation();
 

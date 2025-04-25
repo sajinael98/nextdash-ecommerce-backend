@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.saji.dashboard_backend.shared.dtos.ListResponse;
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 import com.saji.dashboard_backend.shared.services.BaseServiceImpl;
 import com.saji.dashboard_backend.shared.specifications.QueryCriteriaBuilder;
 import com.saji.dashboard_backend.shared.specifications.SearchCriteria;
@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class BaseController<Entity extends BaseEntity> {
+public abstract class BaseController<Entity extends BaseResource> {
     private final BaseServiceImpl<Entity> service;
 
     @PostMapping

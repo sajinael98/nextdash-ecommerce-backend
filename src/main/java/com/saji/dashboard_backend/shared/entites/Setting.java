@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Setting extends BaseEntity {
+public class Setting extends BaseResource {
     @Column
     private String title;
     
