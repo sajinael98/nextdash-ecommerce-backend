@@ -22,6 +22,9 @@ public class StockRoomLog {
     @Column
     @Enumerated(EnumType.STRING)
     private PurchaseTransactionType transactionType;
+    
+    @Column
+    private String transactionVoucherType;
 
     @Column
     private Double qty;

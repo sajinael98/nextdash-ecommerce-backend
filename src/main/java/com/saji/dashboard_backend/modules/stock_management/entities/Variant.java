@@ -3,7 +3,7 @@ package com.saji.dashboard_backend.modules.stock_management.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "variants")
-public class Variant extends BaseEntity{
+public class Variant extends BaseResource{
     @Column(nullable = false)
     private String title;
 

@@ -1,6 +1,6 @@
 package com.saji.dashboard_backend.modules.location_management.entites;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "countries")
-public class Country extends BaseEntity {
+public class Country extends BaseResource {
     @Column(nullable = false)
     private String title;
 

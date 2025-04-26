@@ -2,7 +2,7 @@ package com.saji.dashboard_backend.modules.location_management.entites;
 
 import org.hibernate.annotations.Formula;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "locations")
-public class Location extends BaseEntity {
+public class Location extends BaseResource {
     @Column(nullable = false)
     private long countryId;
 

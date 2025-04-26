@@ -1,6 +1,6 @@
 package com.saji.dashboard_backend.modules.stock_management.entities;
 
-import com.saji.dashboard_backend.shared.entites.BaseEntity;
+import com.saji.dashboard_backend.shared.entites.BaseResource;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Uom extends BaseEntity {
+public class Uom extends BaseResource {
     @Column(nullable = false)
     private String uom;
 }

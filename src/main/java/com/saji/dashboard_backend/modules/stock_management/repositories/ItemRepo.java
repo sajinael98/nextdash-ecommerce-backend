@@ -12,7 +12,7 @@ import com.saji.dashboard_backend.shared.repositories.base.GenericJpaRepository;
 
 @Repository
 public interface ItemRepo extends GenericJpaRepository<Item, Long> {
-    @Query(value = "SELECT u.uomId as value, u.uomId as label FROM res_item_uoms u WHERE u.itemId = :itemId", nativeQuery = true)
+    @Query(value = "SELECT u.uomId as value, u.uom as label FROM res_item_uoms u WHERE u.itemId = :itemId", nativeQuery = true)
     List<Map<String, Object>> getItemUoms(@Param("itemId") Long itemId);
 
     @Query(value = "SELECT u.value FROM res_item_uoms u WHERE u.itemId = :itemId AND u.uomId = :uomId", nativeQuery = true)

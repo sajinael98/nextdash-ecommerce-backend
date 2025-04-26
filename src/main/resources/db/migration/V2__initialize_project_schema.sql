@@ -133,10 +133,13 @@ CREATE TABLE IF NOT EXISTS `res_purchase_transactions` (
 CREATE TABLE IF NOT EXISTS `res_purchase_transaction_items` (
     `voucherId` BIGINT NOT NULL,
     `itemId` BIGINT NOT NULL,
+    `item` VARCHAR(25) NOT NULL,
     `uomId` BIGINT NOT NULL,
-    `price` FLOAT NOT NULL,
-    `qty` FLOAT NOT NULL,
+    `uom` VARCHAR(25) NOT NULL,
     `uomFactor` FLOAT NOT NULL,
+    `qty` FLOAT NOT NULL,
+    `stockQty` FLOAT NOT NULL,
+    `price` FLOAT NOT NULL,
     `total` FLOAT DEFAULT 0,
     PRIMARY KEY (`voucherId`, `itemId`, `uomId`),
     FOREIGN KEY (`voucherId`) REFERENCES `res_purchase_transactions`(`id`),
@@ -186,6 +189,7 @@ CREATE TABLE IF NOT EXISTS `res_stock_room_logs` (
     `transactionId` BIGINT NOT NULL,
     `transactionDate` DATETIME NOT NULL,
     `transactionType` VARCHAR(25) NOT NULL,
+    `transactionVoucherType` VARCHAR(25) NOT NULL,
     `qty` FLOAT DEFAULT 0,
     PRIMARY KEY (`stockRoomId`, `transactionId`),
     FOREIGN KEY (`stockRoomId`) REFERENCES `res_stock_rooms`(`id`)
