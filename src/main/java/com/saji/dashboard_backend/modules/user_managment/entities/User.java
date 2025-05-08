@@ -1,5 +1,6 @@
 package com.saji.dashboard_backend.modules.user_managment.entities;
 
+import java.beans.Transient;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +29,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "sysusers")
-@JsonIgnoreProperties({ "password" })
 @Data
 public class User extends BaseResource implements UserDetails {
     @Embedded
@@ -43,7 +43,7 @@ public class User extends BaseResource implements UserDetails {
     private Set<UserRole> roles = new HashSet<>();
 
     @Override
-    @JsonIgnore
+    @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
         return authorities;
@@ -53,7 +53,7 @@ public class User extends BaseResource implements UserDetails {
     public String getPassword() {
         return this.accountInformation.getPassword();
     }
-    
+
     @Override
     public String getUsername() {
         return this.accountInformation.getUsername();

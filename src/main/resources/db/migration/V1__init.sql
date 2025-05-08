@@ -37,6 +37,7 @@ CREATE INDEX idx_roles_enabled ON `res_roles`(`enabled`);
 CREATE TABLE IF NOT EXISTS `res_user_roles` (
     `userId` BIGINT NOT NULL,
     `roleId` BIGINT NOT NULL,
+    `role` VARCHAR(25),
     FOREIGN KEY (`userId`) REFERENCES `res_sysusers` (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`roleId`) REFERENCES `res_roles` (`id`) ON DELETE CASCADE,
     PRIMARY KEY (`userId`, `roleId`)

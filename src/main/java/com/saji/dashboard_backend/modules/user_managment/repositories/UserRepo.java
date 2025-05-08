@@ -9,9 +9,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.saji.dashboard_backend.modules.user_managment.entities.User;
+import com.saji.dashboard_backend.shared.repositories.base.GenericJpaRepository;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Long> {
+public interface UserRepo extends GenericJpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.accountInformation.email = :email or u.accountInformation.username = :username")
     Optional<User> findByEmailOrUsername(String email, String username);
 
